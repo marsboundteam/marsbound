@@ -1,0 +1,182 @@
+<a class="skip" href="#main" data-i18n="skip">Skip to content</a>
+<canvas id="c3d" aria-label="3D view of Mars" role="img"></canvas>
+<div id="live" class="sr" aria-live="polite"></div>
+
+<!-- LOADER -->
+<div id="loader" role="status" aria-live="polite">
+  <div class="ld-planet" aria-hidden="true"></div>
+  <div class="ld-title">MARSBOUND</div>
+  <div class="ld-bar"><i id="ld-fill"></i></div>
+  <div class="ld-steps" id="ld-steps"></div>
+</div>
+
+<!-- TOP BAR -->
+<header id="top" style="display:none">
+  <button class="brand" id="brand" aria-label="MarsBound main menu"><span class="brand-dot"></span>MARSBOUND</button>
+  <nav id="tabs" aria-label="Sections">
+    <button data-view="globe" data-i18n="nav_globe">Planet</button>
+    <button data-view="field" data-i18n="nav_field">Field</button>
+    <button data-view="env" data-i18n="nav_env">Environment</button>
+    <button data-view="lab" data-i18n="nav_lab">Soil Lab</button>
+    <button data-view="gh" data-i18n="nav_gh">Greenhouse</button>
+    <button data-view="atmo" data-i18n="nav_atmo">Atmosphere What-If</button>
+    <button data-view="research" data-i18n="nav_research">Research</button>
+    <button data-view="learn" data-i18n="nav_learn">Learn</button>
+  </nav>
+  <div class="topctl">
+    <div class="seg" role="group" aria-label="Mode" id="modeseg">
+      <button data-mode="explore" data-i18n="mode_explore">Explore</button>
+      <button data-mode="student" data-i18n="mode_student">Student</button>
+      <button data-mode="research" data-i18n="mode_research">Research</button>
+    </div>
+    <select class="sel" id="lang-top" aria-label="Language"></select>
+    <button class="ibtn" id="btn-settings" aria-label="Settings">⚙</button>
+  </div>
+</header>
+
+<main id="main">
+<!-- MAIN MENU -->
+<section class="view" id="v-menu" aria-label="Main menu">
+  <div class="menu-wrap">
+    <div>
+      <div class="kicker" data-i18n="menu_kicker">Planetary exploration simulator · prototype</div>
+      <h1 class="menu-title">MARSBOUND</h1>
+      <p class="menu-tag" data-i18n="menu_tag">Walk real Martian terrain built from orbital laser altimetry, read the planet’s environment with every value traced to its source, and run the experiments that future explorers will need.</p>
+      <div class="menu-list">
+        <button data-go="globe"><span data-i18n="menu_begin">Begin expedition — choose a landing site</span><span>01</span></button>
+        <button data-go="field"><span data-i18n="menu_field">Go straight to the surface (Jezero Crater)</span><span>02</span></button>
+        <button data-go="env"><span data-i18n="menu_env">Environment monitor</span><span>03</span></button>
+        <button data-go="lab"><span data-i18n="menu_lab">Soil laboratory</span><span>04</span></button>
+        <button data-go="gh"><span data-i18n="menu_gh">Underground greenhouse</span><span>05</span></button>
+        <button data-go="atmo"><span data-i18n="menu_atmo">Atmosphere what-if simulation</span><span>06</span></button>
+        <button data-go="research"><span data-i18n="menu_research">Research dashboard & data provenance</span><span>07</span></button>
+      </div>
+      <div class="row">
+        <label class="muted" for="lang-menu" data-i18n="language">Language</label>
+        <select class="sel" id="lang-menu"></select>
+        <div class="seg" role="group" aria-label="Mode" id="modeseg2">
+          <button data-mode="explore" data-i18n="mode_explore">Explore</button>
+          <button data-mode="student" data-i18n="mode_student">Student</button>
+          <button data-mode="research" data-i18n="mode_research">Research</button>
+        </div>
+        <button class="ibtn" data-open="settings" data-i18n="settings">Settings</button>
+      </div>
+      <div class="menu-clock" id="menu-clock" aria-live="off"></div>
+      <p class="proto" data-i18n="proto_note">Research & education prototype — not an officially validated scientific instrument. Data status labels show what is measured, modelled or simulated.</p>
+    </div>
+    <div></div>
+  </div>
+</section>
+
+<!-- GLOBE -->
+<section class="view" id="v-globe" aria-label="Planet view">
+  <div id="globe-labels"></div>
+  <div id="globe-side" class="panel">
+    <div class="kicker" data-i18n="sites">Exploration sites</div>
+    <div id="site-list" style="margin:8px 0 12px"></div>
+    <label class="muted" for="coord-search" data-i18n="search_coords">Search coordinates or place</label>
+    <div class="row" style="margin-top:6px;flex-wrap:nowrap">
+      <input class="inp" id="coord-search" style="flex:1;min-width:0" placeholder="18.4N 77.5E · -4.6, 137.4 · gale" />
+      <button class="btn sm" id="coord-go" data-i18n="go">Go</button>
+    </div>
+    <div class="muted" id="coord-msg" style="margin-top:6px"></div>
+    <div class="row" style="margin-top:12px">
+      <div class="seg" role="group" aria-label="Globe colouring" id="texseg">
+        <button data-tex="nat" data-i18n="tex_nat">Relief</button>
+        <button data-tex="sci" data-i18n="tex_sci">Elevation map</button>
+      </div>
+      <label class="muted"><input type="checkbox" id="exag-globe" checked> <span data-i18n="exag10">10× relief</span></label>
+    </div>
+  </div>
+  <div id="globe-info" class="panel" style="display:none"></div>
+  <div id="globe-legend" class="panel muted">
+    <span class="st st-MEASURED">MOLA</span> <span data-i18n="globe_legend">Shape and colour from MGS MOLA laser altimetry (MarsTopo719, ≈7 km resolution), elevation relative to the areoid (GMM-3). Colouring is by elevation — not true colour.</span>
+  </div>
+</section>
+
+<!-- FIELD -->
+<section class="view" id="v-field" aria-label="Surface exploration">
+  <div id="hud">
+    <div class="visor"></div>
+    <div id="compass"><div id="compass-strip"></div></div>
+    <div class="whatif-flag" id="whatif-flag">WHAT-IF SKY ACTIVE — FICTIONAL</div>
+    <div id="poi-labels" style="position:absolute;inset:0;pointer-events:none;overflow:hidden"></div>
+    <div id="crosshair"></div>
+    <div id="prompt"></div>
+    <div class="hud-pan" id="hud-left" aria-label="Environment readout">
+      <div class="hud-k" id="hl-title">Environment</div>
+      <div class="hud-grid" id="hud-env" style="margin-top:6px"></div>
+    </div>
+    <div class="hud-pan" id="hud-right" aria-label="Location readout">
+      <div class="hud-k" data-i18n="location">Location</div>
+      <div class="hud-grid" id="hud-loc" style="margin-top:6px"></div>
+      <div id="help-keys" style="margin-top:8px"></div>
+    </div>
+    <div class="hud-pan" id="minimap" title="Open map"><canvas id="mm" width="170" height="170" aria-label="Minimap"></canvas></div>
+    <div class="hud-pan" id="mission" aria-live="polite"></div>
+    <div class="hud-pan" id="hud-bottom">
+      <div class="seg" role="group" aria-label="Movement" id="moveseg">
+        <button data-move="walk" data-i18n="walk">Walk</button>
+        <button data-move="rover" data-i18n="rover">Rover</button>
+        <button data-move="drone" data-i18n="drone">Survey drone</button>
+      </div>
+      <select class="sel" id="timesel" aria-label="Time of day">
+        <option value="live" data-i18n="time_live">Live Mars time</option>
+        <option value="7" data-i18n="sunrise">Morning</option>
+        <option value="12.5" data-i18n="noon">Noon</option>
+        <option value="17.6" data-i18n="sunset">Sunset</option>
+        <option value="22" data-i18n="night">Night</option>
+        <option value="lapse" data-i18n="timelapse">Time-lapse</option>
+      </select>
+      <button class="btn" id="btn-dust" aria-pressed="false" data-i18n="duststorm">Dust storm</button>
+      <button class="btn" id="btn-collect" data-i18n="collect">Collect sample (E)</button>
+      <button class="btn" id="btn-gh" data-i18n="place_gh">Place greenhouse (G)</button>
+      <button class="btn" id="btn-brief" data-i18n="briefing">Briefing</button>
+      <span id="vr-slot"></span>
+    </div>
+    <div id="captions" role="status"></div>
+    <div id="touch"><button id="t-fwd" aria-label="Move forward">▲</button><button id="t-back" aria-label="Move back">▼</button></div>
+  </div>
+</section>
+
+<!-- ENVIRONMENT -->
+<section class="view" id="v-env" aria-label="Environment monitor"><div class="sheet dim"><div class="sheet-inner" id="env-root"></div></div></section>
+<!-- LAB -->
+<section class="view" id="v-lab" aria-label="Soil laboratory"><div class="sheet dim"><div class="sheet-inner" id="lab-root"></div></div></section>
+<!-- GREENHOUSE -->
+<section class="view" id="v-gh" aria-label="Greenhouse"><div class="sheet dim"><div class="sheet-inner" id="gh-root"></div></div></section>
+<!-- ATMOSPHERE -->
+<section class="view" id="v-atmo" aria-label="Atmosphere what-if"><div class="sheet dim"><div class="sheet-inner" id="atmo-root"></div></div></section>
+<!-- RESEARCH -->
+<section class="view" id="v-research" aria-label="Research dashboard"><div class="sheet dim"><div class="sheet-inner" id="res-root"></div></div></section>
+<!-- LEARN -->
+<section class="view" id="v-learn" aria-label="Learn"><div class="sheet dim"><div class="sheet-inner" id="learn-root"></div></div></section>
+</main>
+
+<!-- SETTINGS -->
+<div class="modal" id="m-settings" role="dialog" aria-modal="true" aria-labelledby="set-h">
+  <div class="panel">
+    <div class="row" style="justify-content:space-between"><h2 id="set-h" data-i18n="settings">Settings</h2><button class="ibtn" data-close aria-label="Close">✕</button></div>
+    <div class="set-row"><label for="lang-set" data-i18n="language">Language</label><select class="sel" id="lang-set"></select></div>
+    <div class="set-row"><label for="fs" data-i18n="text_size">Text size</label><input type="range" id="fs" min="13" max="21" step="1" value="15"></div>
+    <div class="set-row"><span data-i18n="high_contrast">High contrast</span><button class="switch" role="switch" id="sw-hc" aria-checked="false" aria-label="High contrast"></button></div>
+    <div class="set-row"><span data-i18n="reduce_motion">Reduce motion</span><button class="switch" role="switch" id="sw-rm" aria-checked="false" aria-label="Reduce motion"></button></div>
+    <div class="set-row"><span data-i18n="captions">Subtitles & sound captions</span><button class="switch" role="switch" id="sw-cap" aria-checked="true" aria-label="Captions"></button></div>
+    <div class="set-row"><span data-i18n="sound">Ambient sound</span><button class="switch" role="switch" id="sw-snd" aria-checked="true" aria-label="Sound"></button></div>
+    <div class="set-row"><span data-i18n="mars_acoustics">Mars acoustics filter</span><button class="switch" role="switch" id="sw-ac" aria-checked="true" aria-label="Mars acoustics"></button></div>
+    <div class="set-row"><label for="q-sel" data-i18n="quality">Graphics quality</label>
+      <select class="sel" id="q-sel"><option value="low" data-i18n="low">Low</option><option value="med" data-i18n="medium">Medium</option><option value="high" data-i18n="high">High</option></select></div>
+    <div class="set-row"><label for="ve-sel" data-i18n="vexag">Terrain vertical exaggeration</label>
+      <select class="sel" id="ve-sel"><option value="1">1× (true scale)</option><option value="2">2×</option><option value="3">3×</option></select></div>
+    <div class="set-row"><label for="sens" data-i18n="look_sens">Look sensitivity</label><input type="range" id="sens" min="0.3" max="2.5" step="0.1" value="1"></div>
+    <p class="muted" data-i18n="i18n_note">Interface, site summaries and key labels are translated. Some detailed scientific text and source titles remain in English.</p>
+  </div>
+</div>
+<div class="modal" id="m-map" role="dialog" aria-modal="true" aria-label="Site map">
+  <div class="panel" style="width:min(760px,96vw)" id="mapbig">
+    <div class="row" style="justify-content:space-between"><div><div class="kicker" data-i18n="sitemap">Site map — MOLA elevation</div><div class="muted" data-i18n="map_hint">Click anywhere to travel there.</div></div><button class="ibtn" data-close aria-label="Close">✕</button></div>
+    <canvas id="mapc" width="700" height="700" style="margin-top:10px"></canvas>
+    <div class="muted" id="map-scale" style="margin-top:6px"></div>
+  </div>
+</div>
+<div id="toast" class="panel" role="status"></div>
